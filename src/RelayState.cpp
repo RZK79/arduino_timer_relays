@@ -13,6 +13,8 @@ RelayState* RelayState::get() {
 }
 
 RelayState::RelayState() {
+    save_exists = 0x0;
+
     relays = {
         {'A', Relay()},
         {'B', Relay()},
@@ -32,17 +34,26 @@ RelayState::RelayState() {
 }
 
 void RelayState::load() {
-    EEPROM.get(0, relays['A']);
-    EEPROM.get(1, relays['B']);
-    EEPROM.get(2, relays['C']);
-    EEPROM.get(3, relays['D']);
+    EEPROM.get(0, save_exists);
+    Serial.println(save_exists, 16);
+    if (save_exists != 0xcafe) {
+        turnOffAllRelays();
+        save();
+    }
+
+    EEPROM.get(sizeof(uint16_t), relays['A']);
+    EEPROM.get(sizeof(uint16_t) + sizeof(Relay), relays['B']);
+    EEPROM.get(sizeof(uint16_t) + 2 * sizeof(Relay), relays['C']);
+    EEPROM.get(sizeof(uint16_t) + 3 * sizeof(Relay), relays['D']);
 }
 
 void RelayState::save() {
-    EEPROM.put(0, relays['A']);
-    EEPROM.put(1, relays['B']);
-    EEPROM.put(2, relays['C']);
-    EEPROM.put(3, relays['D']);
+    save_exists = 0xcafe;
+    EEPROM.put(0, save_exists);
+    EEPROM.put(sizeof(uint16_t), relays['A']);
+    EEPROM.put(sizeof(uint16_t) + sizeof(Relay), relays['B']);
+    EEPROM.put(sizeof(uint16_t) + 2 * sizeof(Relay), relays['C']);
+    EEPROM.put(sizeof(uint16_t) + 3 * sizeof(Relay), relays['D']);
 }
 
 void RelayState::turnOffAllRelays() {
@@ -85,7 +96,7 @@ void RelayState::setRelayOffTime(char relay, int H, int M, int S) {
     relays[relay].relayOffS = S;
 }
 
-const char* RelayState::getRelayOnTimeAsString(char relay) {    
+const char* RelayState::getRelayOnTimeAsString(char relay) {
     sprintf(timeString, "%02d:%02d:%02d", relays[relay].relayOnH, relays[relay].relayOnM, relays[relay].relayOnS);
     return timeString;
 }
@@ -93,4 +104,8 @@ const char* RelayState::getRelayOnTimeAsString(char relay) {
 const char* RelayState::getRelayOffTimeAsString(char relay) {
     sprintf(timeString, "%02d:%02d:%02d", relays[relay].relayOffH, relays[relay].relayOffM, relays[relay].relayOffS);
     return timeString;
+}
+
+Relay RelayState::getRelay(char relay) {
+    return relays[relay];
 }

@@ -16,12 +16,10 @@ class RelayEditController : public Controller {
 
     RelayEditState state;
 
+    uint8_t idx;
     char timeToSet[9];
-    uint8_t currentEditPos;
     char whichRelay;
 
-    void clearTimeToSet();
-    void setAndGoToNext(char key);
     void showRelayTime(char relay, const char* onoff);
     void updateRelayStateInEdit();
 public:

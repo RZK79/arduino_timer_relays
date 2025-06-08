@@ -63,7 +63,7 @@ void Application::setup() {
     rtc->setFormat(24);
 
     RelayState::get()->turnOffAllRelays();
-    // RelayState::get()->load();
+    RelayState::get()->load();
 
     dimmTimer->resume();
 }
@@ -71,6 +71,9 @@ void Application::setup() {
 void Application::loop() {
     currentController->loop();
     dimmTimer->update();
+
+
+    //TODO: sprawdzenie czasu i włączenie przekaznikow
 }
 
 void Application::setControllerAsCurrent(string name) {

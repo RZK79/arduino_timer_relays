@@ -40,6 +40,8 @@ class RelayState
     
     std::map<char, Relay> relays;
     char timeString[9];
+
+    uint16_t save_exists;
 public:
     static RelayState* get();
 
@@ -54,6 +56,8 @@ public:
     void setRelayOffTime(char relay, int H, int M, int S);
     const char* getRelayOnTimeAsString(char relay);
     const char* getRelayOffTimeAsString(char relay);
+
+    Relay getRelay(char relay);
 };
 
 #endif
