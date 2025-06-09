@@ -4,7 +4,6 @@
 Timer::Timer() {
     timeout = 0;
     paused = false;
-    callback = nullptr;
     startMillis = millis();
 }
 
@@ -17,17 +16,21 @@ void Timer::update() {
     }
 
     if (millis() - startMillis >= timeout) {
-        if (callback != nullptr) {
-            callback(this);
-        }
+        if (!listeners.empty())
+            for (int i = 0;i < listeners.size();i++) {
+                listeners[i]->onTime(this);
+            }
         startMillis = millis();
     }
 }
 
-void Timer::start(unsigned long t, void (*_callback)(Timer* timer)) {
-    timeout = t;
+void Timer::addEventListener(TimerEventListener* listener) {
+    listeners.push_back(listener);
+}
+
+void Timer::start(unsigned long timoutToSet) {
+    timeout = timoutToSet;
     startMillis = millis();
-    callback = _callback;
 }
 
 void Timer::stop() {

@@ -6,8 +6,10 @@
 
 Application* Application::instance = nullptr;
 
-void UpdateBacklight(Timer* timer) {
-    LcdHelper::get()->turnoffBacklight();
+void Application::onTime(Timer *timer){
+    if(timer == dimmTimer){
+        LcdHelper::get()->turnoffBacklight();
+    }
 }
 
 Application* Application::get() {
@@ -46,7 +48,6 @@ void Application::setup() {
     for (uint i = 0;i < controllers.size();i++) {
         controllers[i]->setup();
     }
-
     
     LcdHelper::get()->init();
     LcdHelper::get()->setBacklight(true);
@@ -56,7 +57,8 @@ void Application::setup() {
     setControllerAsCurrent("Main");
 
     dimmTimer = new Timer();
-    dimmTimer->start(BACKLIGHT_DIMM_AFTER, UpdateBacklight);
+    dimmTimer->addEventListener(this);
+    dimmTimer->start(BACKLIGHT_DIMM_AFTER);
     dimmTimer->pause();
 
     rtc->begin();

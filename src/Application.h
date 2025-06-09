@@ -6,12 +6,13 @@
 #include <Keypad.h>
 #include <vector>
 #include "Timer.h"
+#include "TimerEventListener.h"
 #include "Controller.h"
 #include "RelayState.h"
 
 using namespace std;
 
-class Application {
+class Application : public TimerEventListener{
     static Application* instance;
     Application();
 
@@ -53,6 +54,8 @@ public:
     void setControllerAsCurrent(string name);
     void pauseBacklightDimming();
     void resumeBacklightDimming();
+
+    void onTime(Timer *timer) override;
 
     Bonezegei_DS3231* getRTC();
     Keypad* getKeypad();

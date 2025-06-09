@@ -1,20 +1,26 @@
 #ifndef _TIMER_H_
 #define _TIMER_H_
 
+#include <vector>
+#include "TimerEventListener.h"
+
+using namespace std;
+
 class Timer{
   unsigned long timeout;
   unsigned long startMillis;
-
-  void (*callback)(Timer* timer);
-
   bool paused;
+
+  vector<TimerEventListener*> listeners;
 public:
   Timer();
   virtual ~Timer();
 
   void update();
 
-  void start(unsigned long t, void (*callback)(Timer* timer));
+  void addEventListener(TimerEventListener *listener);
+
+  void start(unsigned long timoutToSet);
   void stop();
   void pause();
   void resume();
