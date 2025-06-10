@@ -1,5 +1,5 @@
-#include "RelayState.h"
 #include <EEPROM.h>
+#include "RelayState.h"
 #include "Config.h"
 
 RelayState* RelayState::instance = nullptr;
@@ -108,4 +108,18 @@ const char* RelayState::getRelayOffTimeAsString(char relay) {
 
 Relay RelayState::getRelay(char relay) {
     return relays[relay];
+}
+
+void RelayState::turnOn(char relay) {
+    if (!relays[relay].isOn) {
+        digitalWrite(Config::relay_pin[relay], LOW);
+        relays[relay].isOn = true;
+    }
+}
+
+void RelayState::turnOff(char relay) {
+    if (relays[relay].isOn) {
+        digitalWrite(Config::relay_pin[relay], HIGH);
+        relays[relay].isOn = false;
+    }
 }

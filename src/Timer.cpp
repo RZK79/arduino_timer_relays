@@ -17,7 +17,7 @@ void Timer::update() {
 
     if (millis() - startMillis >= timeout) {
         if (!listeners.empty())
-            for (int i = 0;i < listeners.size();i++) {
+            for (uint8_t i = 0;i < listeners.size();i++) {
                 listeners[i]->onTime(this);
             }
         startMillis = millis();

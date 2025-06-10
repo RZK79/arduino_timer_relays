@@ -33,6 +33,7 @@ class Application : public TimerEventListener{
     Controller* currentController = nullptr;
 
     void showSplashScreen();
+    void checkRelayTime(char relay);
 public:
     static Application* get();
 

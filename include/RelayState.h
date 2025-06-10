@@ -50,6 +50,8 @@ public:
 
     void turnOffAllRelays();
     void toggle(char relay);
+    void turnOn(char relay);
+    void turnOff(char relay);
 
     bool isRelayOn(char relay);
     void setRelayOnTime(char relay, int H, int M, int S);
