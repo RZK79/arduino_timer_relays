@@ -14,7 +14,7 @@ typedef struct
     uint8_t relayOffH;
     uint8_t relayOffM;
     uint8_t relayOffS;
-
+    bool forced;
     bool isOn;
 
     void clear() {
@@ -49,11 +49,12 @@ public:
     void save();
 
     void turnOffAllRelays();
-    void toggle(char relay);
-    void turnOn(char relay);
-    void turnOff(char relay);
+    void toggle(char relay, bool force = false);
+    void turnOn(char relay, bool force = false);
+    void turnOff(char relay, bool force = false);
 
     bool isRelayOn(char relay);
+    bool isForced(char relay);
     void setRelayOnTime(char relay, int H, int M, int S);
     void setRelayOffTime(char relay, int H, int M, int S);
     const char* getRelayOnTimeAsString(char relay);

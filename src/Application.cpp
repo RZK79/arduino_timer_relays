@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "MainController.h"
 #include "RelayEditController.h"
+#include "SetDateTimeController.h"
 #include "Constants.h"
 #include "LcdHelper.h"
 
@@ -45,6 +46,7 @@ void Application::setup() {
 
     controllers.push_back(new MainController("Main"));
     controllers.push_back(new RelayEditController("RelayEdit"));
+    controllers.push_back(new SetDateTimeController("SetDateTime"));
 
     for (uint i = 0;i < controllers.size();i++) {
         controllers[i]->setup();
@@ -73,6 +75,7 @@ void Application::setup() {
 
 void Application::loop() {
     currentController->loop();
+
     dimmTimer->update();
 
     if (rtc->getTime()) {
@@ -84,6 +87,10 @@ void Application::loop() {
 }
 
 void Application::checkRelayTime(char relay) {
+    if (RelayState::get()->isForced(relay)) {
+        return;
+    }
+
     tm currentt;
     currentt.tm_year = 2000 + rtc->getYear() - 1870;
     currentt.tm_mon = rtc->getMonth() - 1;

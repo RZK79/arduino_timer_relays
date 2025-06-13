@@ -1,6 +1,6 @@
 #include "Application.h"
-#include "RelayEditController.h"
 #include "LcdHelper.h"
+#include "RelayEditController.h"
 #include "RelayState.h"
 
 RelayEditController::RelayEditController(string name) : Controller(name) {
@@ -16,7 +16,7 @@ void RelayEditController::loop() {
         if (key == '*') {
             Application::get()->setControllerAsCurrent("Main");
         } else if (state == RelayEditState::SET_ON_TIME && key == whichRelay) {
-            RelayState::get()->toggle(whichRelay);
+            RelayState::get()->toggle(whichRelay, true);
             updateRelayStateInEdit();
         } else if (key == '#') {
             char H[3] = { timeToSet[0], timeToSet[1], 0 };

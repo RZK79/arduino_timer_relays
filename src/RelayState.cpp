@@ -70,7 +70,7 @@ void RelayState::turnOffAllRelays() {
     relays['D'].isOn = false;
 }
 
-void RelayState::toggle(char relay) {
+void RelayState::toggle(char relay, bool force = false) {
     if (relays[relay].isOn) {
         digitalWrite(Config::relay_pin[relay], HIGH);
         relays[relay].isOn = false;
@@ -78,10 +78,15 @@ void RelayState::toggle(char relay) {
         digitalWrite(Config::relay_pin[relay], LOW);
         relays[relay].isOn = true;
     }
+    relays[relay].forced = force;
 }
 
 bool RelayState::isRelayOn(char relay) {
     return relays[relay].isOn;
+}
+
+bool RelayState::isForced(char relay) {
+    return relays[relay].forced;
 }
 
 void RelayState::setRelayOnTime(char relay, int H, int M, int S) {
@@ -110,16 +115,18 @@ Relay RelayState::getRelay(char relay) {
     return relays[relay];
 }
 
-void RelayState::turnOn(char relay) {
+void RelayState::turnOn(char relay, bool force = false) {
     if (!relays[relay].isOn) {
         digitalWrite(Config::relay_pin[relay], LOW);
         relays[relay].isOn = true;
+        relays[relay].forced = force;
     }
 }
 
-void RelayState::turnOff(char relay) {
+void RelayState::turnOff(char relay, bool force = false) {
     if (relays[relay].isOn) {
         digitalWrite(Config::relay_pin[relay], HIGH);
         relays[relay].isOn = false;
+        relays[relay].forced = force;
     }
 }
