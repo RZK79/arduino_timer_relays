@@ -35,7 +35,7 @@ RelayState::RelayState() {
 
 void RelayState::load() {
     EEPROM.get(0, save_exists);
-    Serial.println(save_exists, 16);
+    
     if (save_exists != 0xcafe) {
         turnOffAllRelays();
         save();
@@ -45,6 +45,11 @@ void RelayState::load() {
     EEPROM.get(sizeof(uint16_t) + sizeof(Relay), relays['B']);
     EEPROM.get(sizeof(uint16_t) + 2 * sizeof(Relay), relays['C']);
     EEPROM.get(sizeof(uint16_t) + 3 * sizeof(Relay), relays['D']);
+
+    relays['A'].forced = false;
+    relays['B'].forced = false;
+    relays['C'].forced = false;
+    relays['D'].forced = false;
 }
 
 void RelayState::save() {
@@ -58,19 +63,23 @@ void RelayState::save() {
 
 void RelayState::turnOffAllRelays() {
     digitalWrite(Config::relay_pin['A'], HIGH);
+    relays['A'].forced = false;
     relays['A'].isOn = false;
 
     digitalWrite(Config::relay_pin['B'], HIGH);
+    relays['B'].forced = false;
     relays['B'].isOn = false;
 
     digitalWrite(Config::relay_pin['C'], HIGH);
+    relays['C'].forced = false;
     relays['C'].isOn = false;
 
     digitalWrite(Config::relay_pin['D'], HIGH);
+    relays['D'].forced = false;
     relays['D'].isOn = false;
 }
 
-void RelayState::toggle(char relay, bool force = false) {
+void RelayState::toggle(char relay, bool force) {
     if (relays[relay].isOn) {
         digitalWrite(Config::relay_pin[relay], HIGH);
         relays[relay].isOn = false;
@@ -115,7 +124,7 @@ Relay RelayState::getRelay(char relay) {
     return relays[relay];
 }
 
-void RelayState::turnOn(char relay, bool force = false) {
+void RelayState::turnOn(char relay, bool force) {
     if (!relays[relay].isOn) {
         digitalWrite(Config::relay_pin[relay], LOW);
         relays[relay].isOn = true;
@@ -123,7 +132,7 @@ void RelayState::turnOn(char relay, bool force = false) {
     }
 }
 
-void RelayState::turnOff(char relay, bool force = false) {
+void RelayState::turnOff(char relay, bool force) {
     if (relays[relay].isOn) {
         digitalWrite(Config::relay_pin[relay], HIGH);
         relays[relay].isOn = false;

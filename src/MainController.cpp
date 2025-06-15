@@ -69,6 +69,8 @@ void MainController::loop() {
     if (key && (key == 'A' || key == 'B' || key == 'C' || key == 'D')) {
         Application::get()->setControllerAsCurrent("RelayEdit");
         Application::get()->getCurrentController<RelayEditController>()->setWhichRelay(key);
+    }else if(key == '*'){
+        Application::get()->setControllerAsCurrent("SetDateTime");
     }
 }
 
