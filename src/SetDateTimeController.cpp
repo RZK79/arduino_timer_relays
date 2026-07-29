@@ -28,11 +28,17 @@ void SetDateTimeController::showCurrentDateTime() {
     rtc->getTime();
 
     LcdHelper::get()->setPosition(0, 0);
-    sprintf(buf, "%.2d:%.2d:%.2d", rtc->getHour(), rtc->getMinute(), rtc->getSeconds());
+    uint8_t hour = rtc->getHour();
+    uint8_t minute = rtc->getMinute();
+    uint8_t seconds = rtc->getSeconds();
+    sprintf(buf, "%.2d:%.2d:%.2d", hour > 24 ? 0 : hour, minute > 59 ? 0 : minute, seconds > 59 ? 0 : seconds);
     LcdHelper::get()->print(buf);
 
     LcdHelper::get()->setPosition(0, 1);
-    sprintf(buf, "%.2d/%.2d/%.2d", rtc->getYear(), rtc->getMonth(), rtc->getDate());
+    uint8_t year = rtc->getYear();
+    uint8_t month = rtc->getMonth();
+    uint8_t day = rtc->getDate();
+    sprintf(buf, "%.2d/%.2d/%.2d", year > 99 ? 99 : year, month > 12 ? 12 : month, day > 31 ? 1 : day);
     LcdHelper::get()->print(buf);
 
     LcdHelper::get()->setPosition(0, 0);
